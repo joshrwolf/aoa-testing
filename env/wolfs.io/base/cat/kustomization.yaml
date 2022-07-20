@@ -2,5 +2,5 @@ commonLabels:
   cluster: all
 
 resources:
-  - ../../../../../apps/cat/
+  - ../../../../apps/cat/
 
