@@ -1,5 +1,6 @@
 commonLabels:
   cluster: all
+  hi: mom
 
 resources:
   - ../../../../apps/cat/

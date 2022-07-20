@@ -2,4 +2,4 @@ commonLabels:
   cluster: dope
 
 resources:
-  - ../../../../../apps/cat/
+  - ../../../base/cat/
