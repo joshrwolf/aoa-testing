@@ -13,6 +13,7 @@ spec:
         - merge:
             mergeKeys:
               - path.basename
+              - name
             generators:
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
@@ -29,8 +30,8 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: tester-{{env}}
-      name: "{{name}}-{{path.basename}}-tester"
+        app.kubernetes.io/name: "{{name}}-{{path.basename}}-wolfs-io"
+      name: "{{name}}-{{path.basename}}-wolfs-io"
       namespace: argocd
     spec:
       ignoreDifferences:
@@ -42,10 +43,10 @@ spec:
       source:
         path: "{{path}}"
         repoURL: https://github.com/joshrwolf/aoa-testing.git
-        targetRevision: HEAD
+        targetRevision: main
 
       destination:
-        server: "https://kubernetes.default.svc"
+        server: "{{server}}"
 
       syncPolicy:
         automated:
