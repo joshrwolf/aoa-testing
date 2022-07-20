@@ -9,22 +9,19 @@ spec:
       mergeKeys:
         - name
       generators:
-        - clusters:
-            selector:
-              matchLabels:
-                project: aoa
+        - clusters: {}
         - merge:
             mergeKeys:
               - path.basename
             generators:
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
-                  revision: HEAD
+                  revision: main
                   directories:
                     - path: apps/*
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
-                  revision: HEAD
+                  revision: main
                   files:
                     - path: env/wolfs.io/clusters/**/config.yaml
   syncPolicy:
@@ -43,7 +40,7 @@ spec:
         kind: Application
       project: default
       source:
-        path: {{path}}
+        path: "{{path}}"
         repoURL: https://github.com/joshrwolf/aoa-testing.git
         targetRevision: HEAD
 
