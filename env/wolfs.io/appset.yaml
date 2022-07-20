@@ -12,8 +12,7 @@ spec:
         - clusters: {}
         - merge:
             mergeKeys:
-              - path.basename
-              - name
+              - app
             generators:
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
