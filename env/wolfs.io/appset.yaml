@@ -17,8 +17,8 @@ spec:
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
                   revision: main
-                  directories:
-                    - path: apps/*
+                  files:
+                    - path: apps/**/.cfg.yaml
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
                   revision: main
