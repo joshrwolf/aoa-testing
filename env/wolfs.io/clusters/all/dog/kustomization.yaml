@@ -1,0 +1,6 @@
+commonLabels:
+  cluster: all
+
+resources:
+  - ../../../../../apps/dog/
+
