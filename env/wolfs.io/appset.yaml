@@ -12,7 +12,7 @@ spec:
         - clusters: {}
         - merge:
             mergeKeys:
-              - app
+              - path.basename
             generators:
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
@@ -23,7 +23,7 @@ spec:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
                   revision: main
                   files:
-                    - path: env/wolfs.io/clusters/**/config.yaml
+                    - path: env/wolfs.io/clusters/**/.cfg.yaml
   syncPolicy:
     preserveResourcesOnDeletion: false
   template:
