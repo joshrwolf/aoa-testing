@@ -1,15 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: wolfs-io
+  name: kust-wolfs-io
   namespace: argocd
 spec:
   generators:
   - merge:
       mergeKeys:
-        - name
+        - path.basename
       generators:
-        - clusters: {}
+        - matrix:
+            generators:
+              - clusters: {}
+              - git:
+                  repoURL: https://github.com/joshrwolf/aoa-testing.git
+                  revision: main
+                  files:
+                    - path: apps/**/kustomization.yaml
         - merge:
             mergeKeys:
               - path.basename
@@ -18,12 +25,13 @@ spec:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
                   revision: main
                   files:
-                    - path: apps/**/.cfg.yaml
+                    - path: env/wolfs.io/base/**/kustomization.yaml
               - git:
                   repoURL: https://github.com/joshrwolf/aoa-testing.git
                   revision: main
                   files:
                     - path: env/wolfs.io/clusters/**/.cfg.yaml
+
   syncPolicy:
     preserveResourcesOnDeletion: false
   template:
@@ -38,6 +46,12 @@ spec:
         jsonPointers:
         - /status
         kind: Application
+      - group: '*'
+        kind: '*'
+        managedFieldsManagers:
+          - pilot-discovery
+          - Go-http-client
+          - clusterrole-aggregation-controller
       project: default
       source:
         path: "{{path}}"
@@ -46,10 +60,92 @@ spec:
 
       destination:
         server: "{{server}}"
+        namespace: "{{namespace}}"
 
       syncPolicy:
         automated:
           prune: false
           allowEmpty: false
           selfHeal: false
+        syncOptions:
+          - CreateNamespace=true
+          - RespectIgnoreDifferences=true
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: helm-wolfs-io
+  namespace: argocd
+spec:
+  generators:
+  - merge:
+      mergeKeys:
+        - path.basename
+      generators:
+        - matrix:
+            generators:
+              - clusters: {}
+              - git:
+                  repoURL: https://github.com/joshrwolf/aoa-testing.git
+                  revision: main
+                  files:
+                    - path: apps/**/.config.yaml
+        - merge:
+            mergeKeys:
+              - path.basename
+            generators:
+              - git:
+                  repoURL: https://github.com/joshrwolf/aoa-testing.git
+                  revision: main
+                  files:
+                    - path: env/wolfs.io/base/**/values.yaml
+              - git:
+                  repoURL: https://github.com/joshrwolf/aoa-testing.git
+                  revision: main
+                  files:
+                    - path: env/wolfs.io/clusters/**/values.yaml
+
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "{{name}}-{{path.basename}}-wolfs-io"
+      name: "{{name}}-{{path.basename}}-wolfs-io"
+      namespace: argocd
+    spec:
+      ignoreDifferences:
+      - group: argoproj.io
+        jsonPointers:
+        - /status
+        kind: Application
+      - group: '*'
+        kind: '*'
+        managedFieldsManagers:
+          - pilot-discovery
+          - Go-http-client
+          - clusterrole-aggregation-controller
+
+      project: default
+      source:
+        path: "apps/{{path.basename}}"
+        repoURL: https://github.com/joshrwolf/aoa-testing.git
+        targetRevision: main
+        helm:
+          valueFiles:
+            - "../../{{path}}/values.yaml"
+
+      destination:
+        server: "{{server}}"
+        namespace: "{{namespace}}"
+
+      syncPolicy:
+        automated:
+          prune: false
+          allowEmpty: false
+          selfHeal: false
+        syncOptions:
+          - CreateNamespace=true
+          - RespectIgnoreDifferences=true
 
