@@ -1,3 +1,5 @@
+namespace: not-a-dog
+
 commonLabels:
   cluster: all
 
