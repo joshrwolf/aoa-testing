@@ -1,1 +1,4 @@
+name: in-cluster
+namespace: not-cow
+
 replicaCount: 2
