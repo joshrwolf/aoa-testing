@@ -1,0 +1,5 @@
+commonLabels:
+  cluster: dope
+
+resources:
+  - ../../../../../apps/cat/

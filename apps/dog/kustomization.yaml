@@ -1,0 +1,5 @@
+namespace: dog
+
+resources:
+  - github.com/stefanprodan/podinfo//kustomize
+

@@ -1,0 +1,5 @@
+namespace: cat
+
+resources:
+  - github.com/stefanprodan/podinfo//kustomize
+

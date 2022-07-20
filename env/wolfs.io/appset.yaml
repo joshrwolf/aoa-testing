@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: wolfs-io
+  namespace: argocd
+spec:
+  generators:
+  - merge:
+      mergeKeys:
+        - name
+      generators:
+        - clusters:
+            selector:
+              matchLabels:
+                project: aoa
+        - merge:
+            mergeKeys:
+              - path.basename
+            generators:
+              - git:
+                  repoURL: https://github.com/joshrwolf/aoa-testing.git
+                  revision: HEAD
+                  directories:
+                    - path: apps/*
+              - git:
+                  repoURL: https://github.com/joshrwolf/aoa-testing.git
+                  revision: HEAD
+                  files:
+                    - path: env/wolfs.io/clusters/**/config.yaml
+  syncPolicy:
+    preserveResourcesOnDeletion: false
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tester-{{env}}
+      name: "{{name}}-{{path.basename}}-tester"
+      namespace: argocd
+    spec:
+      ignoreDifferences:
+      - group: argoproj.io
+        jsonPointers:
+        - /status
+        kind: Application
+      project: default
+      source:
+        path: {{path}}
+        repoURL: https://github.com/joshrwolf/aoa-testing.git
+        targetRevision: HEAD
+
+      destination:
+        server: "https://kubernetes.default.svc"
+
+      syncPolicy:
+        automated:
+          prune: false
+          allowEmpty: false
+          selfHeal: false
+
